@@ -1,0 +1,10 @@
+{
+  "name": "clean-zilla-functions",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "@azure/storage-blob": "^12.19.0",
+    "@sendgrid/mail": "^7.7.0"
+  }
+}

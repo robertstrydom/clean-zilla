@@ -14,7 +14,9 @@
     <div class="page">
       <header class="hero">
         <nav class="nav">
-          <div class="logo">Clean Zilla</div>
+          <div class="logo">
+            <img src="assets/Logo.png" alt="Clean Zilla logo" />
+          </div>
           <div class="nav-links">
             <a href="#services">Services</a>
             <a href="#process">Process</a>
@@ -24,6 +26,7 @@
         </nav>
         <div class="hero-content">
           <div>
+            <img class="hero-logo" src="assets/Logo.png" alt="Clean Zilla logo" />
             <p class="eyebrow">Cape Town, South Africa · Airbnb turnover cleaning</p>
             <h1>Five-star-ready turnovers, every single stay.</h1>
             <p class="lead">We clean Airbnb apartments by bedroom size with a clear normal vs deep clean rate. Add linen refresh, restocking, or carpet cleaning when needed.</p>
@@ -101,19 +104,81 @@
           <h2>Book in minutes. Host happy in hours.</h2>
         </div>
         <div class="process-steps">
-          <div>
+          <a class="process-card" href="#listing-upload">
             <h3>01. Share your listing details</h3>
             <p>Tell us the bedroom count, checkout time, and guest notes.</p>
-          </div>
-          <div>
+          </a>
+          <div class="process-card">
             <h3>02. We reset and restock</h3>
             <p>Our crew handles the clean, linens, and staging.</p>
           </div>
-          <div>
+          <div class="process-card">
             <h3>03. Get photos + checklist</h3>
             <p>We send proof of clean so you can relax.</p>
           </div>
         </div>
+      </section>
+
+      <section id="listing-upload" class="section listing-upload">
+        <div class="section-header">
+          <p class="eyebrow">Listing details</p>
+          <h2>Share your listing details and upload photos.</h2>
+          <p>After upload, we email you and the client a summary plus the photo links.</p>
+        </div>
+        <form class="listing-form">
+          <div class="form-grid two">
+            <label>
+              Client email
+              <input type="email" name="clientEmail" placeholder="client@email.com" required />
+            </label>
+            <label>
+              Listing ID or name
+              <input type="text" name="listingId" placeholder="Sea Point Studio 12B" required />
+            </label>
+            <label>
+              Apartment size
+              <select name="apartmentSize">
+                <option>1 bedroom</option>
+                <option>2 bedrooms</option>
+                <option>3 bedrooms</option>
+                <option>4 bedrooms</option>
+              </select>
+            </label>
+            <label>
+              Cleaning type
+              <select name="cleaningType">
+                <option>Light clean</option>
+                <option>Deep clean</option>
+                <option>Move-in / move-out</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="listing-extras">
+            <p class="eyebrow">Extras</p>
+            <div class="extras-grid">
+              <label><input type="checkbox" value="Linen + restock" /> Linen + restock</label>
+              <label><input type="checkbox" value="Carpet cleaning" /> Carpet cleaning</label>
+              <label><input type="checkbox" value="Extra towels" /> Extra towels</label>
+              <label><input type="checkbox" value="Welcome pack" /> Welcome pack</label>
+              <label><input type="checkbox" value="Appliance interior clean" /> Appliance interior clean</label>
+              <label><input type="checkbox" value="Balcony/patio clean" /> Balcony/patio clean</label>
+            </div>
+          </div>
+
+          <label>
+            Notes
+            <textarea name="notes" placeholder="Checkout time, guest notes, access details, etc."></textarea>
+          </label>
+
+          <label>
+            Upload photos
+            <input type="file" name="photos" accept="image/*" multiple required />
+          </label>
+
+          <button type="submit" class="btn btn-primary">Send details + upload</button>
+          <p class="price-note listing-status" aria-live="polite"></p>
+        </form>
       </section>
 
       <section id="gallery" class="section gallery">
@@ -141,11 +206,11 @@
             <div class="price-rows">
               <div class="price-row">
                 <span>Basic clean</span>
-                <strong>R350–R450</strong>
+                <strong>R350</strong>
               </div>
               <div class="price-row">
                 <span>Deep clean</span>
-                <strong>R650–R850</strong>
+                <strong>R450</strong>
               </div>
             </div>
             <p class="price-note">Pricing can vary based on condition and requirements.</p>
@@ -156,11 +221,11 @@
             <div class="price-rows">
               <div class="price-row">
                 <span>Basic clean</span>
-                <strong>R450–R650</strong>
+                <strong>R450</strong>
               </div>
               <div class="price-row">
                 <span>Deep clean</span>
-                <strong>R850–R1,250</strong>
+                <strong>R550</strong>
               </div>
             </div>
             <p class="price-note">Deep clean adds skirtings, vents, tiles, and spot detail.</p>
@@ -171,11 +236,11 @@
             <div class="price-rows">
               <div class="price-row">
                 <span>Basic clean</span>
-                <strong>R650–R850</strong>
+                <strong>R650</strong>
               </div>
               <div class="price-row">
                 <span>Deep clean</span>
-                <strong>R1,250–R1,650</strong>
+                <strong>R750</strong>
               </div>
             </div>
             <p class="price-note">Custom quotes for 4+ bedrooms or villas.</p>
@@ -188,106 +253,22 @@
               <div class="pricing-table">
                 <div class="pricing-row">
                   <span>1 bedroom</span>
-                  <strong>R850–R1,250</strong>
+                  <strong>R850</strong>
                 </div>
                 <div class="pricing-row">
                   <span>2 bedrooms</span>
-                  <strong>R1,050–R1,550</strong>
+                  <strong>R1,050</strong>
                 </div>
                 <div class="pricing-row">
                   <span>3 bedrooms</span>
-                  <strong>R1,550–R2,050</strong>
+                  <strong>R1,550</strong>
                 </div>
                 <div class="pricing-row">
                   <span>4 bedrooms</span>
-                  <strong>R2,050–R2,550</strong>
+                  <strong>R2,050</strong>
                 </div>
               </div>
               <p class="price-note">Prices may vary based on condition and specific requirements.</p>
-            </div>
-            <div class="pricing-section">
-              <h3>Specialized add-ons</h3>
-              <div class="addon-grid">
-                <div class="addon-group">
-                  <h4>Carpets &amp; rugs</h4>
-                  <div class="pricing-table">
-                    <div class="pricing-row">
-                      <span>Carpet (standard room)</span>
-                      <strong>R350</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>Carpet (large room)</span>
-                      <strong>R450</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>Carpet (extra large)</span>
-                      <strong>R550</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>Rug cleaning (small)</span>
-                      <strong>R350</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>Rug cleaning (large)</span>
-                      <strong>R320</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>Rug cleaning (extra large)</span>
-                      <strong>R450</strong>
-                    </div>
-                  </div>
-                </div>
-                <div class="addon-group">
-                  <h4>Mattresses</h4>
-                  <div class="pricing-table">
-                    <div class="pricing-row">
-                      <span>Single</span>
-                      <strong>R180</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>Double</span>
-                      <strong>R250</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>Queen</span>
-                      <strong>R300</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>King</span>
-                      <strong>R350</strong>
-                    </div>
-                  </div>
-                </div>
-                <div class="addon-group">
-                  <h4>Couches</h4>
-                  <div class="pricing-table">
-                    <div class="pricing-row">
-                      <span>1 seater</span>
-                      <strong>R250</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>2 seater</span>
-                      <strong>R350</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>3 seater</span>
-                      <strong>R450</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>4 seater</span>
-                      <strong>R550</strong>
-                    </div>
-                    <div class="pricing-row">
-                      <span>5 seater</span>
-                      <strong>R700</strong>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="minimum-fee">
-                <span>Minimum fee (per project)</span>
-                <strong>R550</strong>
-              </div>
             </div>
             <div class="pricing-section">
               <div class="agency-callout">
@@ -300,6 +281,211 @@
           </div>
           <p class="price-note">All ranges are based on a published South African price list; Cape Town quotes can vary.</p>
         </div>
+      </section>
+
+      <section id="deep-clean-booking" class="section booking">
+        <div class="section-header">
+          <p class="eyebrow">Deep clean booking</p>
+          <h2>Build your booking in minutes.</h2>
+          <p>Choose your details and see your total price instantly.</p>
+        </div>
+        <form class="booking-form">
+          <div class="form-block">
+            <h3>Service location</h3>
+            <label>
+              Address
+              <input type="text" placeholder="Street address, suburb, city" />
+            </label>
+          </div>
+
+          <div class="form-block">
+            <h3>Tell us a little about your home</h3>
+            <div class="form-grid two">
+              <label>
+                Cleaning type
+                <select id="bookingCleanType">
+                  <option value="basic">Light clean</option>
+                  <option value="deep" selected>Deep clean</option>
+                  <option value="move">Move-in / move-out</option>
+                </select>
+              </label>
+              <label>
+                Property type
+                <select>
+                  <option>Apartment</option>
+                  <option>House</option>
+                  <option>Townhouse</option>
+                  <option>Villa</option>
+                </select>
+              </label>
+              <label>
+                Bedrooms
+                <select id="bookingBedrooms">
+                  <option value="1">1 bedroom</option>
+                  <option value="2">2 bedrooms</option>
+                  <option value="3">3 bedrooms</option>
+                  <option value="4">4 bedrooms</option>
+                </select>
+              </label>
+              <label>
+                Bathrooms
+                <select>
+                  <option>1 bathroom</option>
+                  <option>2 bathrooms</option>
+                  <option>3 bathrooms</option>
+                  <option>4 bathrooms</option>
+                </select>
+              </label>
+              <label>
+                Occupancy
+                <select>
+                  <option>Owner occupied</option>
+                  <option>Tenant occupied</option>
+                  <option>Vacant</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <h3>Add-on services</h3>
+            <div class="addons-clean">
+              <div class="addon-group">
+                <h4>Carpets &amp; rugs</h4>
+                <label><input type="checkbox" value="350" /> Carpet (standard room) · R350</label>
+                <label><input type="checkbox" value="450" /> Carpet (large room) · R450</label>
+                <label><input type="checkbox" value="550" /> Carpet (extra large) · R550</label>
+                <label><input type="checkbox" value="350" /> Rug cleaning (small) · R350</label>
+                <label><input type="checkbox" value="320" /> Rug cleaning (large) · R320</label>
+                <label><input type="checkbox" value="450" /> Rug cleaning (extra large) · R450</label>
+              </div>
+              <div class="addon-group">
+                <h4>Mattresses</h4>
+                <label><input type="checkbox" value="180" /> Single · R180</label>
+                <label><input type="checkbox" value="250" /> Double · R250</label>
+                <label><input type="checkbox" value="300" /> Queen · R300</label>
+                <label><input type="checkbox" value="350" /> King · R350</label>
+              </div>
+              <div class="addon-group">
+                <h4>Couches</h4>
+                <label><input type="checkbox" value="250" /> 1 seater · R250</label>
+                <label><input type="checkbox" value="350" /> 2 seater · R350</label>
+                <label><input type="checkbox" value="450" /> 3 seater · R450</label>
+                <label><input type="checkbox" value="550" /> 4 seater · R550</label>
+                <label><input type="checkbox" value="700" /> 5 seater · R700</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <h3>Service items</h3>
+            <div class="service-table">
+              <div class="service-row header">
+                <span>Service</span>
+                <span>Price</span>
+              </div>
+              <div class="service-row">
+                <span id="serviceLabel">Deep clean (1 bedroom)</span>
+                <strong id="servicePrice">R450</strong>
+              </div>
+              <div class="service-row">
+                <span>Add-ons</span>
+                <strong id="addonPrice">R0</strong>
+              </div>
+              <div class="service-row">
+                <span>Subtotal</span>
+                <strong id="subtotalPrice">R450</strong>
+              </div>
+              <div class="service-row">
+                <span>VAT</span>
+                <strong id="vatPrice">Included</strong>
+              </div>
+              <div class="service-row total">
+                <span>Total price</span>
+                <strong id="totalPrice">R450</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <h3>Date and time options</h3>
+            <input type="hidden" name="bookingDate" id="bookingDate" />
+            <input type="hidden" name="bookingTime" id="bookingTime" />
+            <div class="booking-calendar">
+              <div class="calendar-header">
+                <button type="button" class="cal-nav" data-dir="-1" aria-label="Previous month">‹</button>
+                <div id="calendarMonth">Month</div>
+                <button type="button" class="cal-nav" data-dir="1" aria-label="Next month">›</button>
+              </div>
+              <div class="calendar-week">
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+                <span>Sun</span>
+              </div>
+              <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+            <div class="booking-times">
+              <h4>Select time</h4>
+              <div class="slot-grid">
+                <button type="button" class="slot">08:00</button>
+                <button type="button" class="slot">09:00</button>
+                <button type="button" class="slot">10:00</button>
+                <button type="button" class="slot">11:00</button>
+                <button type="button" class="slot">12:00</button>
+                <button type="button" class="slot">13:00</button>
+                <button type="button" class="slot">14:00</button>
+                <button type="button" class="slot">15:00</button>
+                <button type="button" class="slot">16:00</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <h3>How can we contact you?</h3>
+            <div class="form-grid two">
+              <label>
+                First name
+                <input type="text" />
+              </label>
+              <label>
+                Last name
+                <input type="text" />
+              </label>
+              <label>
+                Email
+                <input type="email" />
+              </label>
+              <label>
+                Phone
+                <input type="tel" />
+              </label>
+            </div>
+          </div>
+
+          <div class="form-block">
+            <h3>Choose payment method</h3>
+            <div class="payment-options">
+              <label class="payment-option">
+                <input type="radio" name="payment" checked />
+                <span>Pay on the day (cash or card)</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" />
+                <span>Online card payment</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" />
+                <span>Bank transfer (EFT)</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary booking-submit">Book your deep clean</button>
+        </form>
       </section>
 
       <section id="contact" class="section contact">
@@ -358,5 +544,17 @@
     </div>
 
     <script src="script.js"></script>
+    <a class="whatsapp-button" href="https://wa.me/0000000000?text=Hi%2C%20I%27d%20like%20a%20quote%20for%20my%20Airbnb%20clean." aria-label="Chat on WhatsApp">
+      <svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M19.1 17.7c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.8.9-1 1.1-.2.2-.4.2-.7 0-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.5c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6-.1-.2-.7-1.6-1-2.2-.3-.6-.6-.5-.8-.5h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.8 0 1.7 1.2 3.3 1.3 3.5.2.2 2.4 3.7 5.9 5.1.8.3 1.5.5 2 .6.8.3 1.5.2 2.1.1.6-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.1-1.2-.1-.1-.2-.2-.5-.3z"
+        />
+        <path
+          fill="currentColor"
+          d="M16 3.6C9.1 3.6 3.6 9.1 3.6 16c0 2.4.7 4.7 1.9 6.6L3.6 28.4l6-1.9c1.8 1 4 1.6 6.4 1.6 6.9 0 12.4-5.5 12.4-12.4S22.9 3.6 16 3.6zm0 22.2c-2.2 0-4.2-.6-5.9-1.7l-.4-.2-3.5 1.1 1.2-3.4-.2-.4c-1.1-1.7-1.7-3.7-1.7-5.8 0-5.8 4.7-10.5 10.5-10.5S26.5 9.6 26.5 15.4 21.8 25.8 16 25.8z"
+        />
+      </svg>
+    </a>
   </body>
 </html>
