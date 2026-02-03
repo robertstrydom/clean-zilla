@@ -25,6 +25,58 @@ if (form) {
   });
 }
 
+const contactForm = document.querySelector(".contact-form");
+const contactStatus = document.querySelector(".contact-status");
+
+if (contactForm) {
+  contactForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(contactForm);
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const message = formData.get("message");
+
+    if (!name || !email || !message) {
+      if (contactStatus) {
+        contactStatus.textContent = "Please add your name, email, and message.";
+      }
+      return;
+    }
+
+    if (contactStatus) {
+      contactStatus.textContent = "Sending your enquiry...";
+    }
+
+    fetch(`${apiBase}/send-contact`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        phone: formData.get("phone") || "",
+        message,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Unable to send your enquiry. Please try again.");
+        }
+        return response.json();
+      })
+      .then(() => {
+        if (contactStatus) {
+          contactStatus.textContent = "Thanks! We’ve received your enquiry.";
+        }
+        contactForm.reset();
+      })
+      .catch((error) => {
+        if (contactStatus) {
+          contactStatus.textContent = error.message || "Something went wrong. Please try again.";
+        }
+      });
+  });
+}
+
 const pricingMap = {
   basic: {
     1: [450, 450],
