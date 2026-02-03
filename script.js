@@ -27,16 +27,16 @@ if (form) {
 
 const pricingMap = {
   basic: {
-    1: [350, 350],
-    2: [450, 450],
-    3: [650, 650],
-    4: [850, 850],
-  },
-  deep: {
     1: [450, 450],
     2: [550, 550],
     3: [750, 750],
     4: [950, 950],
+  },
+  deep: {
+    1: [550, 550],
+    2: [650, 650],
+    3: [850, 850],
+    4: [1050, 1050],
   },
   move: {
     1: [850, 850],
@@ -56,10 +56,15 @@ const bookingBedrooms = document.querySelector("#bookingBedrooms");
 const bookingCleanType = document.querySelector("#bookingCleanType");
 const bookingPropertyType = bookingForm ? bookingForm.querySelector("select[name='propertyType']") : null;
 const bookingBathrooms = bookingForm ? bookingForm.querySelector("select[name='bathrooms']") : null;
+const bookingAirbnbPack = bookingForm ? bookingForm.querySelector("select[name='airbnbPack']") : null;
+const bookingAirbnbGuests = bookingForm ? bookingForm.querySelector("select[name='airbnbGuests']") : null;
+const bookingAirbnbField = bookingForm ? bookingForm.querySelector(".airbnb-pack-field") : null;
 const serviceLabel = document.querySelector("#serviceLabel");
 const servicePrice = document.querySelector("#servicePrice");
 const propertyTypePrice = document.querySelector("#propertyTypePrice");
 const bathroomPrice = document.querySelector("#bathroomPrice");
+const airbnbPackLabel = document.querySelector("#airbnbPackLabel");
+const airbnbPackPrice = document.querySelector("#airbnbPackPrice");
 const addonPrice = document.querySelector("#addonPrice");
 const addonSummary = document.querySelector("#addonSummary");
 const wallCleaningPrice = document.querySelector("#wallCleaningPrice");
@@ -76,6 +81,7 @@ let bookingTotals = {
   baseMax: 0,
   propertyTypeUplift: 0,
   bathroomSurcharge: 0,
+  airbnbPackTotal: 0,
   addOnTotal: 0,
   totalMin: 0,
   totalMax: 0,
@@ -95,6 +101,17 @@ const updateBookingForm = () => {
   const cleanType = bookingCleanType ? bookingCleanType.value : "deep";
   const baseRange = pricingMap[cleanType]?.[size] || [0, 0];
   const propertyType = bookingPropertyType ? bookingPropertyType.value : "Apartment";
+  if (bookingAirbnbField && bookingAirbnbPack) {
+    if (propertyType === "Airbnb") {
+      bookingAirbnbField.classList.add("is-visible");
+    } else {
+      bookingAirbnbField.classList.remove("is-visible");
+      bookingAirbnbPack.value = "";
+      if (bookingAirbnbGuests) {
+        bookingAirbnbGuests.value = "2";
+      }
+    }
+  }
   const houseTypes = new Set(["House", "Townhouse", "Villa"]);
   const upliftRate = houseTypes.has(propertyType) ? 0.15 : 0;
   const upliftMin = Math.round(baseRange[0] * upliftRate);
@@ -105,6 +122,13 @@ const updateBookingForm = () => {
   const extraBathrooms = Math.max(0, bathCount - 1);
   const bathRate = cleanType === "basic" ? 150 : 200;
   const bathroomSurcharge = extraBathrooms * bathRate;
+
+  const airbnbPackPrices = { basic: 95, premium: 175, deluxe: 295 };
+  const airbnbPackValue = bookingAirbnbPack ? bookingAirbnbPack.value : "";
+  const airbnbGuestsValue = bookingAirbnbGuests ? Number(bookingAirbnbGuests.value || 2) : 2;
+  const airbnbMultiplier = Math.max(1, Math.ceil(airbnbGuestsValue / 2));
+  const airbnbBase = airbnbPackValue ? airbnbPackPrices[airbnbPackValue] || 0 : 0;
+  const airbnbPackTotal = airbnbBase * airbnbMultiplier;
 
   const addOnInputs = Array.from(bookingForm.querySelectorAll(".addons-clean input[type='number']"));
   const addOnChecks = Array.from(bookingForm.querySelectorAll(".addons-clean input[type='checkbox']"));
@@ -133,13 +157,14 @@ const updateBookingForm = () => {
         .map((input) => input.dataset.addonLabel || "Add-on")
     );
 
-  const minTotal = adjustedBase[0] + bathroomSurcharge + addOnTotal;
-  const maxTotal = adjustedBase[1] + bathroomSurcharge + addOnTotal;
+  const minTotal = adjustedBase[0] + bathroomSurcharge + airbnbPackTotal + addOnTotal;
+  const maxTotal = adjustedBase[1] + bathroomSurcharge + airbnbPackTotal + addOnTotal;
   bookingTotals = {
     baseMin: adjustedBase[0],
     baseMax: adjustedBase[1],
     propertyTypeUplift: upliftMin,
     bathroomSurcharge,
+    airbnbPackTotal,
     addOnTotal,
     totalMin: minTotal,
     totalMax: maxTotal,
@@ -162,6 +187,14 @@ const updateBookingForm = () => {
     bathroomPrice.textContent = bathroomSurcharge ? formatZar(bathroomSurcharge) : "R0";
   }
 
+  if (airbnbPackPrice) {
+    airbnbPackPrice.textContent = airbnbPackTotal ? formatZar(airbnbPackTotal) : "R0";
+  }
+  if (airbnbPackLabel) {
+    const guestSuffix = airbnbPackValue ? ` (${airbnbGuestsValue} guests)` : "";
+    airbnbPackLabel.textContent = `Airbnb welcome pack${guestSuffix}`;
+  }
+
   const wallInput = bookingForm.querySelector(".addons-clean input[data-addon-type='area']");
   const wallQty = wallInput ? Number(wallInput.value || 0) : 0;
   const wallCost = wallInput ? wallQty * Number(wallInput.dataset.addonPrice || 0) : 0;
@@ -174,7 +207,11 @@ const updateBookingForm = () => {
     wallCleaningPrice.textContent = wallCost ? formatZar(wallCost) : "R0";
   }
   if (addonSummary) {
-    addonSummary.textContent = addOnList.length ? `(${addOnList.join(", ")})` : "";
+    const airbnbPackNote = airbnbPackValue
+      ? `Airbnb welcome pack (${airbnbPackValue}, ${airbnbGuestsValue} guests)`
+      : "";
+    const combined = addOnList.concat(airbnbPackNote ? [airbnbPackNote] : []);
+    addonSummary.textContent = combined.length ? `(${combined.join(", ")})` : "";
   }
 
   if (subtotalPrice) {
@@ -228,6 +265,12 @@ if (bookingForm) {
           (input) => input.dataset.addonLabel || "Add-on"
         )
       );
+    const airbnbPackValue = formData.get("airbnbPack");
+    const airbnbGuestsValue = Number(formData.get("airbnbGuests") || 2);
+    if (airbnbPackValue) {
+      const packLabel = `Airbnb welcome pack (${airbnbPackValue}, ${airbnbGuestsValue} guests)`;
+      addOnLabels.push(packLabel);
+    }
 
     const payload = {
       email,
@@ -242,6 +285,9 @@ if (bookingForm) {
       bathrooms: formData.get("bathrooms"),
       occupancy: formData.get("occupancy"),
       addOns: addOnLabels.filter(Boolean),
+      airbnbPack: airbnbPackValue,
+      airbnbGuests: airbnbGuestsValue,
+      airbnbPackTotal: bookingTotals.airbnbPackTotal,
       basePrice: bookingTotals.baseMin === bookingTotals.baseMax ? bookingTotals.baseMin : bookingTotals.baseMin,
       propertyTypeUplift: bookingTotals.propertyTypeUplift,
       bathroomSurcharge: bookingTotals.bathroomSurcharge,
@@ -283,6 +329,23 @@ if (bookingForm) {
         }
       });
   });
+  const bookingParams = new URLSearchParams(window.location.search);
+  const cleanTypeParam = bookingParams.get("cleanType");
+  if (cleanTypeParam && bookingCleanType) {
+    bookingCleanType.value = cleanTypeParam;
+  }
+  const propertyParam = bookingParams.get("propertyType");
+  if (propertyParam && bookingPropertyType) {
+    bookingPropertyType.value = propertyParam;
+  }
+  const packParam = bookingParams.get("airbnbPack");
+  if (packParam && bookingAirbnbPack) {
+    bookingAirbnbPack.value = packParam;
+  }
+  const guestsParam = bookingParams.get("airbnbGuests");
+  if (guestsParam && bookingAirbnbGuests) {
+    bookingAirbnbGuests.value = guestsParam;
+  }
   updateBookingForm();
 }
 
@@ -818,3 +881,18 @@ timeSlots.forEach((slot) => {
 });
 
 renderCalendar();
+
+const airbnbGuestSelect = document.querySelector("#airbnbGuestsSelect");
+if (airbnbGuestSelect) {
+  const updateAirbnbPackLinks = () => {
+    const guestsValue = airbnbGuestSelect.value || "2";
+    document.querySelectorAll(".airbnb-pack[data-pack]").forEach((card) => {
+      const pack = card.getAttribute("data-pack");
+      if (!pack) return;
+      card.href = `book-a-clean.html?propertyType=Airbnb&airbnbPack=${encodeURIComponent(pack)}&airbnbGuests=${encodeURIComponent(guestsValue)}`;
+    });
+  };
+
+  airbnbGuestSelect.addEventListener("change", updateAirbnbPackLinks);
+  updateAirbnbPackLinks();
+}

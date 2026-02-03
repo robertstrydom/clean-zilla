@@ -77,7 +77,7 @@ module.exports = async function (context, req) {
     sgMail.setApiKey(sendGridApiKey);
 
     const magicLink = buildMagicLink(token);
-    const subject = "Your Clean Zilla photo gallery link";
+    const subject = "Your KleanZilla photo gallery link";
     const textBody = `
 Here is your secure link to view your booking and photos:
 
@@ -106,3 +106,4 @@ If you did not request this, you can ignore this email.
     context.res = { status: 500, headers, body: { error: "Magic link request failed." } };
   }
 };
+

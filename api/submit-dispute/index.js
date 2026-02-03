@@ -45,7 +45,7 @@ module.exports = async function (context, req) {
     sgMail.setApiKey(sendGridApiKey);
 
     const fileList = files.length ? files.map((url) => `• ${url}`).join("\n") : "No files uploaded.";
-    const subject = `Clean Zilla dispute submitted: ${booking.rowKey}`;
+    const subject = `KleanZilla dispute submitted: ${booking.rowKey}`;
     const textBody = `
 Dispute submitted
 Booking: ${booking.rowKey}
@@ -90,3 +90,4 @@ ${fileList}
     context.res = { status: 500, headers, body: { error: "Dispute submit failed." } };
   }
 };
+

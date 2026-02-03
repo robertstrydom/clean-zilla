@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Service my Airbnb | KleanZilla</title>
+    <meta name="description" content="Airbnb-ready services and welcome packs for KleanZilla hosts." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <nav class="nav">
+          <div class="logo">
+            <a href="index.html">
+              <img src="assets/Logo.png" alt="KleanZilla logo" />
+            </a>
+          </div>
+          <div class="nav-links">
+            <a href="index.html#services">Services</a>
+            <a href="index.html#pricing">Pricing</a>
+            <a href="book-a-clean.html" class="btn btn-secondary book-now">Book now</a>
+            <a href="service-my-airbnb.html">Service my Airbnb</a>
+            <a href="dispute.html">Log a dispute</a>
+          </div>
+        </nav>
+      </header>
+
+      <section class="section services">
+        <div class="section-header">
+          <p class="eyebrow">Service my Airbnb</p>
+          <h2>Guest-ready touches that lift reviews.</h2>
+          <p>Choose a welcome pack per booking. We’ll stage it before guest arrival.</p>
+        </div>
+        <div class="form-grid two airbnb-guest-selector">
+          <label>
+            Number of guests
+            <select id="airbnbGuestsSelect">
+              <option value="2" selected>2 guests (included)</option>
+              <option value="4">4 guests</option>
+              <option value="6">6 guests</option>
+              <option value="8">8 guests</option>
+              <option value="10">10 guests</option>
+            </select>
+            <span class="price-note">Each pack includes 2 guests. We scale packs by guest count. Contact us for larger groups.</span>
+          </label>
+        </div>
+        <div class="pricing-grid">
+          <a class="price-card airbnb-pack" data-pack="basic" href="book-a-clean.html?propertyType=Airbnb&airbnbPack=basic&airbnbGuests=2">
+            <h3>Basic Welcome Pack · R95</h3>
+            <p>Ideal for short stays.</p>
+            <ul>
+              <li>Tea + coffee sachets</li>
+              <li>Sugar + sweetener</li>
+              <li>Milk portions</li>
+              <li>Still water</li>
+            </ul>
+          </a>
+          <a class="price-card highlight airbnb-pack" data-pack="premium" href="book-a-clean.html?propertyType=Airbnb&airbnbPack=premium&airbnbGuests=2">
+            <h3>Premium Welcome Pack · R175</h3>
+            <p>Most popular choice.</p>
+            <ul>
+              <li>Everything in Basic</li>
+              <li>Extra beverages</li>
+              <li>Local snack</li>
+              <li>Guest note card</li>
+            </ul>
+          </a>
+          <a class="price-card airbnb-pack" data-pack="deluxe" href="book-a-clean.html?propertyType=Airbnb&airbnbPack=deluxe&airbnbGuests=2">
+            <h3>Deluxe Welcome Pack · R295</h3>
+            <p>For luxury listings.</p>
+            <ul>
+              <li>Everything in Premium</li>
+              <li>Extra snack selection</li>
+              <li>Local treat</li>
+              <li>Upgraded presentation</li>
+            </ul>
+          </a>
+        </div>
+        <div class="hero-actions">
+          <a href="book-a-clean.html" class="btn btn-primary btn-cta">Build a quote</a>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>© 2026 KleanZilla. Locally owned in Cape Town.</p>
+        <div class="footer-links">
+          <a href="index.html#services">Services</a>
+          <a href="index.html#pricing">Pricing</a>
+          <a href="book-a-clean.html">Book</a>
+          <a href="service-my-airbnb.html">Service my Airbnb</a>
+          <a href="dispute.html">Log a dispute</a>
+        </div>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <a class="whatsapp-button" href="https://wa.me/0000000000?text=Hi%2C%20I%27d%20like%20a%20quote%20for%20my%20Airbnb%20clean." aria-label="Chat on WhatsApp">
+      <svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M19.1 17.7c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.8.9-1 1.1-.2.2-.4.2-.7 0-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.5c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6-.1-.2-.7-1.6-1-2.2-.3-.6-.6-.5-.8-.5h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.8 0 1.7 1.2 3.3 1.3 3.5.2.2 2.4 3.7 5.9 5.1.8.3 1.5.5 2 .6.8.3 1.5.2 2.1.1.6-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.1-1.2-.1-.1-.2-.2-.5-.3z"
+        />
+        <path
+          fill="currentColor"
+          d="M16 3.6C9.1 3.6 3.6 9.1 3.6 16c0 2.4.7 4.7 1.9 6.6L3.6 28.4l6-1.9c1.8 1 4 1.6 6.4 1.6 6.9 0 12.4-5.5 12.4-12.4S22.9 3.6 16 3.6zm0 22.2c-2.2 0-4.2-.6-5.9-1.7l-.4-.2-3.5 1.1 1.2-3.4-.2-.4c-1.1-1.7-1.7-3.7-1.7-5.8 0-5.8 4.7-10.5 10.5-10.5S26.5 9.6 26.5 15.4 21.8 25.8 16 25.8z"
+        />
+      </svg>
+    </a>
+  </body>
+</html>

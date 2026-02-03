@@ -120,7 +120,7 @@ module.exports = async function (context, req) {
 
     const magicLink = buildMagicLink(token);
 
-    const subject = `Your Clean Zilla quote · ${totalDisplay}`;
+    const subject = `Your KleanZilla quote · ${totalDisplay}`;
     const textBody = `
 Hi ${body.firstName || "there"},
 
@@ -175,3 +175,4 @@ We will confirm availability shortly.
     };
   }
 };
+

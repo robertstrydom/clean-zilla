@@ -76,7 +76,7 @@ module.exports = async function (context, req) {
     sgMail.setApiKey(sendGridApiKey);
 
     const adminLink = buildAdminLink(token);
-    const subject = "Your Clean Zilla admin upload link";
+    const subject = "Your KleanZilla admin upload link";
     const textBody = `
 Here is your secure admin upload link:
 
@@ -102,3 +102,4 @@ ${adminLink}
     context.res = { status: 500, headers, body: { error: "Admin link request failed." } };
   }
 };
+

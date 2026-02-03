@@ -1,6 +1,6 @@
-# Clean Zilla
+# KleanZilla
 
-Clean Zilla marketing site for Azure Static Web Apps.
+KleanZilla marketing site for Azure Static Web Apps.
 
 ## Function App environment variables
 
@@ -15,3 +15,4 @@ Clean Zilla marketing site for Azure Static Web Apps.
 - `ADMIN_EMAILS` (comma/semicolon separated list for admin links)
 - `ADMIN_LINK_BASE_URL` (optional, admin link host, defaults to `MAGIC_LINK_BASE_URL`)
 - `TABLE_CUSTOMERS` / `TABLE_BOOKINGS` / `TABLE_TOKENS` (optional table names)
+
