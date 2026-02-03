@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Uploads | Clean Zilla</title>
+    <meta name="description" content="Admin-only uploads for Clean Zilla before/after photos." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <nav class="nav">
+          <div class="logo">
+            <a href="index.html">
+              <img src="assets/Logo.png" alt="Clean Zilla logo" />
+            </a>
+          </div>
+          <div class="nav-links">
+            <a href="index.html#services">Services</a>
+            <a href="index.html#pricing">Pricing</a>
+            <a href="index.html#deep-clean-booking" class="btn btn-secondary">Book now</a>
+            <a href="dispute.html">Log a dispute</a>
+          </div>
+        </nav>
+        <div class="hero-content">
+          <div>
+            <p class="eyebrow">Admin portal</p>
+            <h1>KleanZilla team uploads.</h1>
+            <p class="lead">Request a secure admin link, then upload before/after photos for a booking.</p>
+          </div>
+          <div class="hero-card">
+            <div class="card-header">Access</div>
+            <div class="card-body">
+              <h2>Get your admin link</h2>
+              <form class="admin-link-form">
+                <label>
+                  Admin email
+                  <input type="email" name="email" placeholder="you@kleanzilla.co.za" required />
+                </label>
+                <button type="submit" class="btn btn-primary">Send admin link</button>
+                <p class="price-note admin-link-status" aria-live="polite"></p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="section customer-portal">
+        <div class="section-header">
+          <h2>Upload before/after photos</h2>
+          <p>Use the admin link (with token) to upload photos for a booking.</p>
+        </div>
+        <div class="portal-grid">
+          <div class="gallery-panel">
+            <form class="admin-upload-form">
+              <label>
+                Customer email
+                <input type="email" name="adminEmail" placeholder="client@email.com" />
+              </label>
+              <label>
+                Booking ID
+                <input type="text" name="bookingId" placeholder="Booking ID from quote email" />
+              </label>
+              <label>
+                Stage
+                <select name="stage">
+                  <option value="before">Before</option>
+                  <option value="after">After</option>
+                </select>
+              </label>
+              <label>
+                Upload photos
+                <input type="file" name="adminPhotos" accept="image/*" multiple />
+              </label>
+              <button type="submit" class="btn btn-secondary">Upload before/after</button>
+              <p class="price-note admin-upload-status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>© 2026 Clean Zilla. Locally owned in Cape Town.</p>
+        <div class="footer-links">
+          <a href="index.html#services">Services</a>
+          <a href="index.html#pricing">Pricing</a>
+          <a href="index.html#deep-clean-booking">Book</a>
+          <a href="dispute.html">Log a dispute</a>
+        </div>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

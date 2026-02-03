@@ -41,7 +41,7 @@ img {
 }
 
 .hero {
-  padding: 32px 80px 80px;
+  padding: 28px 64px 72px;
   background: linear-gradient(130deg, #ffffff 0%, #e9fbf6 55%, #dbf4ec 100%);
 }
 
@@ -79,8 +79,8 @@ img {
 .hero-content {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 48px;
-  margin-top: 64px;
+  gap: 36px;
+  margin-top: 56px;
   align-items: center;
 }
 
@@ -201,7 +201,7 @@ h1 {
 }
 
 .section {
-  padding: 80px 80px;
+  padding: 72px 64px;
 }
 
 .section-header {
@@ -223,9 +223,9 @@ h1 {
 
 .service-card {
   background: var(--mist);
-  padding: 24px;
-  border-radius: 20px;
-  box-shadow: 0 16px 24px rgba(58, 214, 200, 0.25);
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 10px 18px rgba(58, 214, 200, 0.18);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -273,7 +273,7 @@ h1 {
 
 .pricing-grid {
   display: grid;
-  gap: 24px;
+  gap: 20px;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
@@ -283,12 +283,64 @@ h1 {
 
 .booking-form {
   background: #fff;
-  border-radius: 24px;
-  padding: 28px;
+  border-radius: 22px;
+  padding: 24px;
   border: 1px solid rgba(58, 214, 200, 0.45);
   box-shadow: 0 18px 30px rgba(58, 214, 200, 0.3);
   display: grid;
   gap: 24px;
+}
+
+.customer-portal .portal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.gallery-panel {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(12, 84, 82, 0.08);
+}
+
+.gallery-summary {
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.gallery-section {
+  margin-top: 16px;
+}
+
+.gallery-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.gallery-strip img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(11, 64, 62, 0.12);
+}
+
+.dispute-form {
+  margin-top: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.admin-upload-form {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 12px;
 }
 
 .booking-form label {
@@ -351,8 +403,26 @@ h1 {
   text-transform: none;
   letter-spacing: 0;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
+  flex-direction: column;
+}
+
+.addon-qty input[type="number"] {
+  width: 48px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.addon-qty span,
+.addon-check span {
+  text-align: center;
+}
+
+.addon-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
 }
 
 .service-table {
@@ -445,6 +515,10 @@ h1 {
   width: 100%;
   border-radius: 12px;
   padding: 14px 20px;
+}
+
+.location-button {
+  width: fit-content;
 }
 
 .booking-calendar {
@@ -730,7 +804,7 @@ textarea {
 }
 
 .footer {
-  padding: 32px 80px 48px;
+  padding: 28px 64px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -745,12 +819,12 @@ textarea {
 
 @media (max-width: 980px) {
   .hero {
-    padding: 32px 32px 64px;
+    padding: 28px 28px 56px;
   }
 
   .section,
   .footer {
-    padding: 64px 32px;
+    padding: 56px 28px;
   }
 
   .hero-content {
@@ -766,7 +840,7 @@ textarea {
   }
 
   .booking-form {
-    padding: 22px;
+    padding: 20px;
   }
 
   .form-grid.two {

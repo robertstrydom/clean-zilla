@@ -18,10 +18,12 @@ sections.forEach((section, index) => {
 });
 
 const form = document.querySelector(".form");
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  alert("Thanks! We'll reach out within one business day.");
-});
+if (form) {
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    alert("Thanks! We'll reach out within one business day.");
+  });
+}
 
 const pricingMap = {
   basic: {
@@ -52,11 +54,37 @@ const formatPrice = (min, max) => (min === max ? formatZar(min) : `${formatZar(m
 const bookingForm = document.querySelector(".booking-form");
 const bookingBedrooms = document.querySelector("#bookingBedrooms");
 const bookingCleanType = document.querySelector("#bookingCleanType");
+const bookingPropertyType = bookingForm ? bookingForm.querySelector("select[name='propertyType']") : null;
+const bookingBathrooms = bookingForm ? bookingForm.querySelector("select[name='bathrooms']") : null;
 const serviceLabel = document.querySelector("#serviceLabel");
 const servicePrice = document.querySelector("#servicePrice");
+const propertyTypePrice = document.querySelector("#propertyTypePrice");
+const bathroomPrice = document.querySelector("#bathroomPrice");
 const addonPrice = document.querySelector("#addonPrice");
+const addonSummary = document.querySelector("#addonSummary");
+const wallCleaningPrice = document.querySelector("#wallCleaningPrice");
 const subtotalPrice = document.querySelector("#subtotalPrice");
 const totalPrice = document.querySelector("#totalPrice");
+const bookingStatus = document.querySelector(".booking-status");
+const locationButton = document.querySelector(".location-button");
+const locationStatus = document.querySelector(".location-status");
+
+const apiBase = "https://prod-kz-fn-email-processor.azurewebsites.net/api";
+
+let bookingTotals = {
+  baseMin: 0,
+  baseMax: 0,
+  propertyTypeUplift: 0,
+  bathroomSurcharge: 0,
+  addOnTotal: 0,
+  totalMin: 0,
+  totalMax: 0,
+};
+
+const parseBathroomCount = (value) => {
+  const match = String(value || "").match(/^\d+/);
+  return match ? Number(match[0]) : 0;
+};
 
 const updateBookingForm = () => {
   if (!bookingForm || !bookingBedrooms) {
@@ -66,11 +94,56 @@ const updateBookingForm = () => {
   const size = bookingBedrooms.value;
   const cleanType = bookingCleanType ? bookingCleanType.value : "deep";
   const baseRange = pricingMap[cleanType]?.[size] || [0, 0];
-  const addOns = Array.from(bookingForm.querySelectorAll(".addons-clean input:checked"));
-  const addOnTotal = addOns.reduce((sum, checkbox) => sum + Number(checkbox.value || 0), 0);
+  const propertyType = bookingPropertyType ? bookingPropertyType.value : "Apartment";
+  const houseTypes = new Set(["House", "Townhouse", "Villa"]);
+  const upliftRate = houseTypes.has(propertyType) ? 0.15 : 0;
+  const upliftMin = Math.round(baseRange[0] * upliftRate);
+  const upliftMax = Math.round(baseRange[1] * upliftRate);
+  const adjustedBase = [baseRange[0] + upliftMin, baseRange[1] + upliftMax];
 
-  const minTotal = baseRange[0] + addOnTotal;
-  const maxTotal = baseRange[1] + addOnTotal;
+  const bathCount = parseBathroomCount(bookingBathrooms ? bookingBathrooms.value : 0);
+  const extraBathrooms = Math.max(0, bathCount - 1);
+  const bathRate = cleanType === "basic" ? 150 : 200;
+  const bathroomSurcharge = extraBathrooms * bathRate;
+
+  const addOnInputs = Array.from(bookingForm.querySelectorAll(".addons-clean input[type='number']"));
+  const addOnChecks = Array.from(bookingForm.querySelectorAll(".addons-clean input[type='checkbox']"));
+  const addOnTotal = addOnInputs.reduce((sum, input) => {
+    const qty = Number(input.value || 0);
+    const price = Number(input.dataset.addonPrice || 0);
+    return sum + qty * price;
+  }, 0) + addOnChecks.reduce((sum, input) => {
+    const price = Number(input.dataset.addonPrice || 0);
+    return input.checked ? sum + price : sum;
+  }, 0);
+  const addOnList = addOnInputs
+    .map((input) => {
+      const qty = Number(input.value || 0);
+      if (!qty) return "";
+      const label = input.dataset.addonLabel || "Add-on";
+      if (input.dataset.addonType === "area") {
+        return `${qty} m² ${label.replace(" (m²)", "")}`;
+      }
+      return `${qty}x ${label}`;
+    })
+    .filter(Boolean)
+    .concat(
+      addOnChecks
+        .filter((input) => input.checked)
+        .map((input) => input.dataset.addonLabel || "Add-on")
+    );
+
+  const minTotal = adjustedBase[0] + bathroomSurcharge + addOnTotal;
+  const maxTotal = adjustedBase[1] + bathroomSurcharge + addOnTotal;
+  bookingTotals = {
+    baseMin: adjustedBase[0],
+    baseMax: adjustedBase[1],
+    propertyTypeUplift: upliftMin,
+    bathroomSurcharge,
+    addOnTotal,
+    totalMin: minTotal,
+    totalMax: maxTotal,
+  };
 
   if (serviceLabel) {
     const label = cleanType === "basic" ? "Light clean" : "Deep clean";
@@ -78,11 +151,30 @@ const updateBookingForm = () => {
   }
 
   if (servicePrice) {
-    servicePrice.textContent = formatPrice(baseRange[0], baseRange[1]);
+    servicePrice.textContent = formatPrice(adjustedBase[0], adjustedBase[1]);
   }
 
+  if (propertyTypePrice) {
+    propertyTypePrice.textContent = upliftRate ? formatPrice(upliftMin, upliftMax) : "R0";
+  }
+
+  if (bathroomPrice) {
+    bathroomPrice.textContent = bathroomSurcharge ? formatZar(bathroomSurcharge) : "R0";
+  }
+
+  const wallInput = bookingForm.querySelector(".addons-clean input[data-addon-type='area']");
+  const wallQty = wallInput ? Number(wallInput.value || 0) : 0;
+  const wallCost = wallInput ? wallQty * Number(wallInput.dataset.addonPrice || 0) : 0;
+
   if (addonPrice) {
-    addonPrice.textContent = addOnTotal === 0 ? "R0" : formatZar(addOnTotal);
+    const nonWallAddOns = addOnTotal - wallCost;
+    addonPrice.textContent = nonWallAddOns <= 0 ? "R0" : formatZar(nonWallAddOns);
+  }
+  if (wallCleaningPrice) {
+    wallCleaningPrice.textContent = wallCost ? formatZar(wallCost) : "R0";
+  }
+  if (addonSummary) {
+    addonSummary.textContent = addOnList.length ? `(${addOnList.join(", ")})` : "";
   }
 
   if (subtotalPrice) {
@@ -98,9 +190,134 @@ if (bookingForm) {
   bookingForm.addEventListener("change", updateBookingForm);
   bookingForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    alert("Thanks! We'll confirm availability and final pricing shortly.");
+    const formData = new FormData(bookingForm);
+    const email = formData.get("email");
+    const address = formData.get("address");
+    const suburb = formData.get("suburb");
+    const paymentMethod = formData.get("paymentMethod");
+
+    if (!email || !address || !suburb) {
+      if (bookingStatus) {
+        bookingStatus.textContent = "Please add your email, address, and suburb to continue.";
+      }
+      return;
+    }
+
+    const submitButton = bookingForm.querySelector("button[type='submit']");
+    if (submitButton) {
+      submitButton.disabled = true;
+    }
+
+    if (bookingStatus) {
+      bookingStatus.textContent = "Preparing your quote...";
+    }
+
+    const addOnLabels = Array.from(bookingForm.querySelectorAll(".addons-clean input[type='number']"))
+      .map((input) => {
+        const qty = Number(input.value || 0);
+        if (!qty) return "";
+        const label = input.dataset.addonLabel || "Add-on";
+        if (input.dataset.addonType === "area") {
+          return `Wall cleaning × ${qty} m²`;
+        }
+        return `${label} × ${qty}`;
+      })
+      .filter(Boolean)
+      .concat(
+        Array.from(bookingForm.querySelectorAll(".addons-clean input[type='checkbox']:checked")).map(
+          (input) => input.dataset.addonLabel || "Add-on"
+        )
+      );
+
+    const payload = {
+      email,
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      phone: formData.get("phone"),
+      address,
+      suburb,
+      cleanType: formData.get("cleanType"),
+      propertyType: formData.get("propertyType"),
+      bedrooms: formData.get("bedrooms"),
+      bathrooms: formData.get("bathrooms"),
+      occupancy: formData.get("occupancy"),
+      addOns: addOnLabels.filter(Boolean),
+      basePrice: bookingTotals.baseMin === bookingTotals.baseMax ? bookingTotals.baseMin : bookingTotals.baseMin,
+      propertyTypeUplift: bookingTotals.propertyTypeUplift,
+      bathroomSurcharge: bookingTotals.bathroomSurcharge,
+      addOnTotal: bookingTotals.addOnTotal,
+      totalMin: bookingTotals.totalMin,
+      totalMax: bookingTotals.totalMax,
+      bookingDate: formData.get("bookingDate"),
+      bookingTime: formData.get("bookingTime"),
+      paymentMethod,
+    };
+
+    fetch(`${apiBase}/create-quote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Quote request failed. Please try again.");
+        }
+        return response.json();
+      })
+      .then(() => {
+        if (bookingStatus) {
+          bookingStatus.textContent =
+            "Quote sent! Check your email for your secure gallery link and booking summary.";
+        }
+        bookingForm.reset();
+        updateBookingForm();
+      })
+      .catch((error) => {
+        if (bookingStatus) {
+          bookingStatus.textContent = error.message || "Something went wrong. Please try again.";
+        }
+      })
+      .finally(() => {
+        if (submitButton) {
+          submitButton.disabled = false;
+        }
+      });
   });
   updateBookingForm();
+}
+
+if (locationButton) {
+  locationButton.addEventListener("click", () => {
+    if (!navigator.geolocation) {
+      if (locationStatus) {
+        locationStatus.textContent = "Location is not supported on this device.";
+      }
+      return;
+    }
+
+    if (locationStatus) {
+      locationStatus.textContent = "Detecting your location...";
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const latInput = bookingForm?.querySelector("input[name='lat']");
+        const lngInput = bookingForm?.querySelector("input[name='lng']");
+        if (latInput) latInput.value = String(pos.coords.latitude);
+        if (lngInput) lngInput.value = String(pos.coords.longitude);
+        if (locationStatus) {
+          locationStatus.textContent =
+            "Location detected. Please confirm your street address and suburb.";
+        }
+      },
+      () => {
+        if (locationStatus) {
+          locationStatus.textContent = "Unable to detect location. Please enter address manually.";
+        }
+      },
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
+    );
+  });
 }
 
 const listingForm = document.querySelector(".listing-form");
@@ -152,17 +369,17 @@ if (listingForm) {
       const uploadedUrls = [];
 
       for (const file of files) {
-      const sasResponse = await fetch("https://prod-kz-fn-email-processor.azurewebsites.net/api/get-upload-sas", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            clientEmail,
-            listingId: safeListing,
-            date: dateStamp,
-            fileName: file.name,
-            contentType: file.type,
-          }),
-        });
+      const sasResponse = await fetch(`${apiBase}/get-upload-sas`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          clientEmail,
+          listingId: safeListing,
+          date: dateStamp,
+          fileName: file.name,
+          contentType: file.type,
+        }),
+      });
 
         if (!sasResponse.ok) {
           throw new Error("Unable to prepare upload.");
@@ -188,7 +405,7 @@ if (listingForm) {
 
       setListingStatus("Sending confirmation email...");
 
-      const notifyResponse = await fetch("https://prod-kz-fn-email-processor.azurewebsites.net/api/send-upload-email", {
+      const notifyResponse = await fetch(`${apiBase}/send-upload-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -217,6 +434,313 @@ if (listingForm) {
       }
     }
   });
+}
+
+const magicLinkForm = document.querySelector(".magic-link-form");
+const magicLinkStatus = document.querySelector(".magic-link-status");
+const gallerySummary = document.querySelector("#gallerySummary");
+const galleryBefore = document.querySelector("#galleryBefore");
+const galleryAfter = document.querySelector("#galleryAfter");
+const galleryDispute = document.querySelector("#galleryDispute");
+const disputeForm = document.querySelector(".dispute-form");
+const disputeStatus = document.querySelector(".dispute-status");
+const adminUploadForm = document.querySelector(".admin-upload-form");
+const adminUploadStatus = document.querySelector(".admin-upload-status");
+const adminLinkForm = document.querySelector(".admin-link-form");
+const adminLinkStatus = document.querySelector(".admin-link-status");
+
+let activeToken = null;
+let adminToken = null;
+
+const renderGalleryStrip = (container, items) => {
+  if (!container) {
+    return;
+  }
+  container.innerHTML = "";
+  if (!items.length) {
+    const empty = document.createElement("p");
+    empty.className = "price-note";
+    empty.textContent = "No images yet.";
+    container.appendChild(empty);
+    return;
+  }
+  items.forEach((item) => {
+    const img = document.createElement("img");
+    img.src = item.url;
+    img.alt = item.name || "Gallery image";
+    container.appendChild(img);
+  });
+};
+
+const loadGallery = (token) => {
+  activeToken = token;
+  fetch(`${apiBase}/get-gallery?token=${encodeURIComponent(token)}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Unable to load gallery. Please request a new link.");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (gallerySummary) {
+        gallerySummary.textContent = `Booking ${data.booking?.id || ""} · ${data.booking?.cleanType || ""} · ${
+          data.booking?.bedrooms || ""
+        } bedrooms`;
+      }
+      renderGalleryStrip(galleryBefore, data.gallery?.before || []);
+      renderGalleryStrip(galleryAfter, data.gallery?.after || []);
+      renderGalleryStrip(galleryDispute, data.gallery?.dispute || []);
+    })
+    .catch((error) => {
+      if (gallerySummary) {
+        gallerySummary.textContent = error.message || "Unable to load gallery.";
+      }
+    });
+};
+
+if (magicLinkForm) {
+  magicLinkForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(magicLinkForm);
+    const email = formData.get("email");
+
+    if (!email) {
+      if (magicLinkStatus) {
+        magicLinkStatus.textContent = "Please enter your email address.";
+      }
+      return;
+    }
+
+    if (magicLinkStatus) {
+      magicLinkStatus.textContent = "Sending your secure link...";
+    }
+
+    fetch(`${apiBase}/request-magic-link`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Unable to send the link. Please contact support.");
+        }
+        return response.json();
+      })
+      .then(() => {
+        if (magicLinkStatus) {
+          magicLinkStatus.textContent = "Check your inbox for your secure gallery link.";
+        }
+        magicLinkForm.reset();
+      })
+      .catch((error) => {
+        if (magicLinkStatus) {
+          magicLinkStatus.textContent = error.message || "Unable to send link.";
+        }
+      });
+  });
+}
+
+if (adminLinkForm) {
+  adminLinkForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(adminLinkForm);
+    const email = formData.get("email");
+
+    if (!email) {
+      if (adminLinkStatus) {
+        adminLinkStatus.textContent = "Please enter your admin email.";
+      }
+      return;
+    }
+
+    if (adminLinkStatus) {
+      adminLinkStatus.textContent = "Sending admin link...";
+    }
+
+    fetch(`${apiBase}/request-admin-link`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Unable to send admin link.");
+        }
+        return response.json();
+      })
+      .then(() => {
+        if (adminLinkStatus) {
+          adminLinkStatus.textContent = "Check your inbox for the admin link.";
+        }
+        adminLinkForm.reset();
+      })
+      .catch((error) => {
+        if (adminLinkStatus) {
+          adminLinkStatus.textContent = error.message || "Unable to send admin link.";
+        }
+      });
+  });
+}
+
+if (disputeForm) {
+  disputeForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!activeToken) {
+      if (disputeStatus) {
+        disputeStatus.textContent = "Please open your secure gallery link first.";
+      }
+      return;
+    }
+
+    const files = disputeForm.querySelector("input[name='disputePhotos']").files;
+    const notes = disputeForm.querySelector("textarea[name='disputeNotes']")?.value || "";
+    if (!files.length) {
+      if (disputeStatus) {
+        disputeStatus.textContent = "Please select at least one photo.";
+      }
+      return;
+    }
+
+    if (disputeStatus) {
+      disputeStatus.textContent = "Uploading dispute photos...";
+    }
+
+    try {
+      const uploadedUrls = [];
+      for (const file of files) {
+        const sasResponse = await fetch(`${apiBase}/get-dispute-upload-sas`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token: activeToken,
+            fileName: file.name,
+            contentType: file.type,
+          }),
+        });
+
+        if (!sasResponse.ok) {
+          throw new Error("Unable to prepare dispute upload.");
+        }
+
+        const { sasUrl, blobUrl } = await sasResponse.json();
+        const uploadResponse = await fetch(sasUrl, {
+          method: "PUT",
+          headers: {
+            "x-ms-blob-type": "BlockBlob",
+            "Content-Type": file.type || "application/octet-stream",
+          },
+          body: file,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("Dispute upload failed. Please try again.");
+        }
+
+        uploadedUrls.push(blobUrl);
+      }
+
+      const notifyResponse = await fetch(`${apiBase}/submit-dispute`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: activeToken, notes, files: uploadedUrls }),
+      });
+
+      if (!notifyResponse.ok) {
+        throw new Error("Dispute submitted, but notification failed.");
+      }
+
+      if (disputeStatus) {
+        disputeStatus.textContent = "Dispute submitted. We will review shortly.";
+      }
+      disputeForm.reset();
+      loadGallery(activeToken);
+    } catch (error) {
+      if (disputeStatus) {
+        disputeStatus.textContent = error.message || "Unable to upload dispute photos.";
+      }
+    }
+  });
+}
+
+if (adminUploadForm) {
+  adminUploadForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const formData = new FormData(adminUploadForm);
+    const email = formData.get("adminEmail");
+    const bookingId = formData.get("bookingId");
+    const stage = formData.get("stage");
+    const files = adminUploadForm.querySelector("input[name='adminPhotos']").files;
+
+    if (!adminToken || !email || !bookingId || !files.length) {
+      if (adminUploadStatus) {
+        adminUploadStatus.textContent = "Use the admin link, then fill in all fields and select photos.";
+      }
+      return;
+    }
+
+    if (adminUploadStatus) {
+      adminUploadStatus.textContent = "Uploading before/after photos...";
+    }
+
+    try {
+      for (const file of files) {
+        const sasResponse = await fetch(`${apiBase}/get-admin-upload-sas`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: adminToken,
+            email,
+            bookingId,
+            stage,
+            fileName: file.name,
+            contentType: file.type,
+          }),
+        });
+
+        if (!sasResponse.ok) {
+          throw new Error("Unable to prepare admin upload.");
+        }
+
+        const { sasUrl } = await sasResponse.json();
+        const uploadResponse = await fetch(sasUrl, {
+          method: "PUT",
+          headers: {
+            "x-ms-blob-type": "BlockBlob",
+            "Content-Type": file.type || "application/octet-stream",
+          },
+          body: file,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("Admin upload failed. Please try again.");
+        }
+      }
+
+      if (adminUploadStatus) {
+        adminUploadStatus.textContent = "Upload complete.";
+      }
+      adminUploadForm.reset();
+      if (activeToken) {
+        loadGallery(activeToken);
+      }
+    } catch (error) {
+      if (adminUploadStatus) {
+        adminUploadStatus.textContent = error.message || "Unable to upload photos.";
+      }
+    }
+  });
+}
+
+const urlToken = new URLSearchParams(window.location.search).get("token");
+if (urlToken) {
+  loadGallery(urlToken);
+}
+
+const urlAdminToken = new URLSearchParams(window.location.search).get("adminToken");
+if (urlAdminToken) {
+  adminToken = urlAdminToken;
 }
 
 const calendarGrid = document.querySelector("#calendarGrid");

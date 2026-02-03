@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Log a Dispute | Clean Zilla</title>
+    <meta name="description" content="Access your Clean Zilla photo gallery and log a dispute if something was missed." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <nav class="nav">
+          <div class="logo">
+            <a href="index.html">
+              <img src="assets/Logo.png" alt="Clean Zilla logo" />
+            </a>
+          </div>
+          <div class="nav-links">
+            <a href="index.html#services">Services</a>
+            <a href="index.html#pricing">Pricing</a>
+            <a href="index.html#deep-clean-booking" class="btn btn-secondary">Book now</a>
+            <a href="dispute.html">Log a dispute</a>
+          </div>
+        </nav>
+        <div class="hero-content">
+          <div>
+            <p class="eyebrow">Customer portal</p>
+            <h1>Access your photos and log a dispute.</h1>
+            <p class="lead">We email a magic link after checkout. If you need it again, request a fresh link below.</p>
+          </div>
+          <div class="hero-card">
+            <div class="card-header">Need help?</div>
+            <div class="card-body">
+              <h2>Support team</h2>
+              <p>Email us if you need immediate assistance.</p>
+              <a href="mailto:hello@cleanzilla.co.za" class="btn btn-primary">Email support</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section id="customer-portal" class="section customer-portal">
+        <div class="section-header">
+          <h2>Log a dispute</h2>
+          <p>View your before/after photos and upload any dispute images.</p>
+        </div>
+        <div class="portal-grid">
+          <form class="magic-link-form">
+            <label>
+              Email address
+              <input type="email" name="email" placeholder="you@email.com" required />
+            </label>
+            <button type="submit" class="btn btn-secondary">Send my secure link</button>
+            <p class="price-note magic-link-status" aria-live="polite"></p>
+          </form>
+          <div class="gallery-panel">
+            <div class="gallery-summary" id="gallerySummary"></div>
+            <div class="gallery-section">
+              <h3>Before photos</h3>
+              <div class="gallery-strip" id="galleryBefore"></div>
+            </div>
+            <div class="gallery-section">
+              <h3>After photos</h3>
+              <div class="gallery-strip" id="galleryAfter"></div>
+            </div>
+            <div class="gallery-section">
+              <h3>Dispute photos</h3>
+              <div class="gallery-strip" id="galleryDispute"></div>
+            </div>
+            <form class="dispute-form">
+              <label>
+                Upload dispute photos
+                <input type="file" name="disputePhotos" accept="image/*" multiple />
+              </label>
+              <label>
+                Tell us what went wrong
+                <textarea name="disputeNotes" placeholder="Let us know which room or item needs attention."></textarea>
+              </label>
+              <button type="submit" class="btn btn-primary">Submit dispute images</button>
+              <p class="price-note dispute-status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>© 2026 Clean Zilla. Locally owned in Cape Town.</p>
+        <div class="footer-links">
+          <a href="index.html#services">Services</a>
+          <a href="index.html#pricing">Pricing</a>
+          <a href="index.html#deep-clean-booking">Book</a>
+          <a href="dispute.html">Log a dispute</a>
+        </div>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
