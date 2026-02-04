@@ -893,6 +893,11 @@ textarea {
     width: 100%;
   }
 
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
   .booking-form {
     padding: 20px;
   }
