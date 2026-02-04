@@ -903,6 +903,37 @@ textarea {
   }
 }
 
+@media (max-width: 720px) {
+  .hero {
+    padding: 24px 20px 40px;
+  }
+
+  .section,
+  .footer {
+    padding: 48px 20px;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .contact-card {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .contact-form .btn {
+    width: 100%;
+  }
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(20px);
