@@ -898,6 +898,10 @@ textarea {
     transform: none;
   }
 
+  .reveal.is-visible {
+    transition: none;
+  }
+
   .booking-form {
     padding: 20px;
   }
