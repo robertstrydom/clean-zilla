@@ -880,6 +880,18 @@ textarea {
   align-items: center;
   background: linear-gradient(90deg, rgba(255, 47, 214, 0.08), rgba(255, 233, 35, 0.12), rgba(33, 247, 240, 0.12));
   color: #0b2b2b;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+
+.footer-credit {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.footer-credit a {
+  color: inherit;
+  text-decoration: underline;
 }
 
 .footer-links {
