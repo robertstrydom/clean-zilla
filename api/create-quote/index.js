@@ -82,6 +82,8 @@ module.exports = async function (context, req) {
       bookingDate: body.bookingDate || "",
       bookingTime: body.bookingTime || "",
       paymentMethod: body.paymentMethod || "",
+      paymentAmount: Number(body.totalMax || 0),
+      paymentCurrency: "ZAR",
       status: "quote",
       createdAt: now.toISOString(),
     });

@@ -104,6 +104,7 @@ const formatZar = (value) =>
 const formatPrice = (min, max) => (min === max ? formatZar(min) : `${formatZar(min)}–${formatZar(max)}`);
 
 const bookingForm = document.querySelector(".booking-form");
+const paymentBanner = document.querySelector(".payment-banner");
 const bookingBedrooms = document.querySelector("#bookingBedrooms");
 const bookingCleanType = document.querySelector("#bookingCleanType");
 const bookingPropertyType = bookingForm ? bookingForm.querySelector("select[name='propertyType']") : null;
@@ -362,7 +363,38 @@ if (bookingForm) {
         }
         return response.json();
       })
-      .then(() => {
+      .then((data) => {
+        if (paymentMethod === "payfast") {
+          if (bookingStatus) {
+            bookingStatus.textContent = "Redirecting you to Payfast...";
+          }
+          return fetch(`${apiBase}/payfast-prepare`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ bookingId: data.bookingId, email }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Unable to start Payfast payment. Please try again.");
+              }
+              return response.json();
+            })
+            .then((payfast) => {
+              const formEl = document.createElement("form");
+              formEl.method = "POST";
+              formEl.action = payfast.payfastUrl;
+              Object.entries(payfast.fields || {}).forEach(([key, value]) => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = value;
+                formEl.appendChild(input);
+              });
+              document.body.appendChild(formEl);
+              formEl.submit();
+            });
+        }
+
         if (bookingStatus) {
           bookingStatus.textContent =
             "Quote sent! Check your email for your secure gallery link and booking summary.";
@@ -383,8 +415,16 @@ if (bookingForm) {
   });
   const bookingParams = new URLSearchParams(window.location.search);
   const cleanTypeParam = bookingParams.get("cleanType");
+  const bedroomsParam = bookingParams.get("bedrooms");
+  const paidParam = bookingParams.get("paid");
+  if (paymentBanner && paidParam === "1") {
+    paymentBanner.hidden = false;
+  }
   if (cleanTypeParam && bookingCleanType) {
     bookingCleanType.value = cleanTypeParam;
+  }
+  if (bedroomsParam && bookingBedrooms) {
+    bookingBedrooms.value = bedroomsParam;
   }
   const propertyParam = bookingParams.get("propertyType");
   if (propertyParam && bookingPropertyType) {
